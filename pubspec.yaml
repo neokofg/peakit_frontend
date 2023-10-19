@@ -9,6 +9,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_map: ^6.0.0
+  flutter_native_splash: ^2.3.4
+  http: ^1.1.0
+  latlong2: ^0.9.0
+  webview_flutter: ^4.4.1
 
 dev_dependencies:
   flutter_test:
@@ -17,3 +22,13 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/
+
+flutter_native_splash:
+  android: true
+  ios: true
+  web: false
+
+  color: "#FFFFFF"
+  image: "assets/minilogo.png"
