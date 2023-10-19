@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:peakit_frontend/pages/auth/confirm_email.dart';
+import 'package:deti_azii/pages/auth/confirm_email.dart';
 import 'dart:convert';
 
 class RegisterPage extends StatelessWidget {

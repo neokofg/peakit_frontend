@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:peakit_frontend/pages/auth/auth.dart';
+import 'package:deti_azii/pages/auth/auth.dart';
 
 void main() {
   runApp(const MainApp());

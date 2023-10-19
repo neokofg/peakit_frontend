@@ -5,8 +5,8 @@ import 'dart:convert';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:peakit_frontend/pages/auth/register.dart';
-import 'package:peakit_frontend/pages/home/home.dart';
+import 'package:deti_azii/pages/auth/register.dart';
+import 'package:deti_azii/pages/home/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -45,9 +45,9 @@ class AuthPage extends StatelessWidget {
         body: SafeArea(
       child: ListView(
         children: [
-          Image.asset('assets/Image.png'),
+          Image.asset('assets/imagelogin.png'),
           Padding(
-            padding: EdgeInsets.only(top: 40),
+            padding: EdgeInsets.only(top: 20),
             child: Column(
               children: [
                 const Padding(

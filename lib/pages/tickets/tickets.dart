@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:peakit_frontend/pages/maps/maps.dart';
-import 'package:peakit_frontend/pages/profile/profile.dart';
-import 'package:peakit_frontend/pages/home/home.dart';
-import 'package:peakit_frontend/pages/tickets/qrcode.dart';
-import 'package:peakit_frontend/pages/webview.dart';
+import 'package:deti_azii/pages/maps/maps.dart';
+import 'package:deti_azii/pages/profile/profile.dart';
+import 'package:deti_azii/pages/home/home.dart';
+import 'package:deti_azii/pages/scanqrcode.dart';
+import 'package:deti_azii/pages/tickets/qrcode.dart';
+import 'package:deti_azii/pages/webview.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -95,14 +96,14 @@ class _TicketsPageState extends State<TicketsPage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.search,
+              Icons.location_on,
               color: Color.fromARGB(255, 212, 214, 221),
             ),
             label: 'Карты',
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.person,
+              Icons.confirmation_number,
               color: Color.fromARGB(255, 0, 111, 253),
             ),
             label: 'Билеты',
@@ -117,7 +118,45 @@ class _TicketsPageState extends State<TicketsPage> {
         ],
       ),
       body: SafeArea(
-        child: _ticketWidget ?? Center(child: CircularProgressIndicator()),
+        child: Column(
+          children: [
+            _ticketWidget ??
+                SizedBox(
+                  height: 300,
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+            Expanded(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 24.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const ScanQRPage()));
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      foregroundColor: Colors.white,
+                      minimumSize:
+                          Size(MediaQuery.of(context).size.width - 48, 50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        side: const BorderSide(
+                          color: Colors.blue,
+                          width: 1.0,
+                        ),
+                      ),
+                    ),
+                    child: const Text("Сканировать"),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

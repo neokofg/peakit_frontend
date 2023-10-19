@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:peakit_frontend/pages/home/languages.dart';
-import 'package:peakit_frontend/pages/maps/maps.dart';
-import 'package:peakit_frontend/pages/profile/profile.dart';
-import 'package:peakit_frontend/pages/results/results.dart';
-import 'package:peakit_frontend/pages/tickets/qrcode.dart';
-import 'package:peakit_frontend/pages/tickets/tickets.dart';
-import 'package:peakit_frontend/pages/webview.dart';
+import 'package:deti_azii/pages/home/languages.dart';
+import 'package:deti_azii/pages/maps/maps.dart';
+import 'package:deti_azii/pages/profile/profile.dart';
+import 'package:deti_azii/pages/results/results.dart';
+import 'package:deti_azii/pages/tickets/qrcode.dart';
+import 'package:deti_azii/pages/tickets/tickets.dart';
+import 'package:deti_azii/pages/translations/translations.dart';
+import 'package:deti_azii/pages/webview.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -125,14 +126,14 @@ class _HomePageState extends State<HomePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.search,
+              Icons.location_on,
               color: Color.fromARGB(255, 212, 214, 221),
             ),
             label: 'Карты',
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.person,
+              Icons.confirmation_number,
               color: Color.fromARGB(255, 212, 214, 221),
             ),
             label: 'Билеты',
@@ -165,7 +166,9 @@ class _HomePageState extends State<HomePage> {
                         height: 164,
                         child: GestureDetector(
                           onTap: () {
-                            // Действие при нажатии на изображение
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) =>
+                                    const TranslationsPage()));
                           },
                           child: Image.asset('assets/cameratranslation.png'),
                         ),

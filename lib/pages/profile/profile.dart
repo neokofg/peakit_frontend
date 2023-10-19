@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:peakit_frontend/pages/auth/auth.dart';
-import 'package:peakit_frontend/pages/profile/editprofile.dart';
-import 'package:peakit_frontend/pages/maps/maps.dart';
-import 'package:peakit_frontend/pages/tickets/tickets.dart';
-import 'package:peakit_frontend/pages/home/home.dart';
+import 'package:deti_azii/pages/auth/auth.dart';
+import 'package:deti_azii/pages/profile/editprofile.dart';
+import 'package:deti_azii/pages/maps/maps.dart';
+import 'package:deti_azii/pages/tickets/tickets.dart';
+import 'package:deti_azii/pages/home/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -222,14 +222,14 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.search,
+              Icons.location_on,
               color: Color.fromARGB(255, 212, 214, 221),
             ),
             label: 'Карты',
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.person,
+              Icons.confirmation_number,
               color: Color.fromARGB(255, 212, 214, 221),
             ),
             label: 'Билеты',

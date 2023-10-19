@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-import 'package:peakit_frontend/pages/home/home.dart';
+import 'package:deti_azii/pages/home/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterFinishPage extends StatelessWidget {

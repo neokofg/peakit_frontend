@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:peakit_frontend/pages/profile/profile.dart';
-import 'package:peakit_frontend/pages/home/home.dart';
-import 'package:peakit_frontend/pages/tickets/tickets.dart';
+import 'package:deti_azii/pages/profile/profile.dart';
+import 'package:deti_azii/pages/home/home.dart';
+import 'package:deti_azii/pages/tickets/tickets.dart';
 import 'package:flutter_map/flutter_map.dart';
 
 class MapsPage extends StatelessWidget {
@@ -57,14 +57,14 @@ class MapsPage extends StatelessWidget {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.search,
+              Icons.location_on,
               color: Color.fromARGB(255, 0, 111, 253),
             ),
             label: 'Карты',
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.person,
+              Icons.confirmation_number,
               color: Color.fromARGB(255, 212, 214, 221),
             ),
             label: 'Билеты',
@@ -92,16 +92,53 @@ class MapsPage extends StatelessWidget {
           const MarkerLayer(
             markers: [
               Marker(
-                  point: LatLng(62.034456, 129.715796),
-                  child: Column(
-                    children: [
-                      Icon(Icons.pin_drop),
-                      Text(
-                        "Вход",
-                        style: TextStyle(fontSize: 5),
-                      )
-                    ],
-                  ))
+                point: LatLng(62.034456, 129.715796),
+                child: Column(
+                  children: [
+                    Icon(Icons.door_front_door),
+                    Text(
+                      "Entrance",
+                      style: TextStyle(fontSize: 5.5),
+                    )
+                  ],
+                ),
+              ),
+              Marker(
+                point: LatLng(62.034954, 129.714150),
+                child: Column(
+                  children: [
+                    Icon(Icons.wc),
+                    Text(
+                      "WC",
+                      style: TextStyle(fontSize: 5.5),
+                    )
+                  ],
+                ),
+              ),
+              Marker(
+                point: LatLng(62.033688, 129.713608),
+                child: Column(
+                  children: [
+                    Icon(Icons.fastfood),
+                    Text(
+                      "Foodcoart",
+                      style: TextStyle(fontSize: 5.5),
+                    )
+                  ],
+                ),
+              ),
+              Marker(
+                point: LatLng(62.035574, 129.715667),
+                child: Column(
+                  children: [
+                    Icon(Icons.fastfood),
+                    Text(
+                      "Foodcoart",
+                      style: TextStyle(fontSize: 5.5),
+                    )
+                  ],
+                ),
+              ),
             ],
           )
         ],
