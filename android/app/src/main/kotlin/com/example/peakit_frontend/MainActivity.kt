@@ -1,4 +1,4 @@
-package com.example.peakit_frontend
+package com.triumph.deti_azii
 
 import io.flutter.embedding.android.FlutterActivity
 

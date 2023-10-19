@@ -1,3 +1,4 @@
+import 'package:deti_azii/pages/youtubewebview.dart';
 import 'package:flutter/material.dart';
 import 'package:deti_azii/pages/home/languages.dart';
 import 'package:deti_azii/pages/maps/maps.dart';
@@ -237,7 +238,8 @@ class _HomePageState extends State<HomePage> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            // Действие при нажатии на изображение
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => YoutubePage()));
                           },
                           child: const Text(
                             'Перейти',
@@ -254,7 +256,8 @@ class _HomePageState extends State<HomePage> {
                     padding: const EdgeInsets.only(top: 24),
                     child: GestureDetector(
                       onTap: () {
-                        // Действие при нажатии на изображение
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => YoutubePage()));
                       },
                       child: Image.asset("assets/preview.png"),
                     ),
