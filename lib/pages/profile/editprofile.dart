@@ -1,6 +1,12 @@
 // ignore_for_file: library_private_types_in_public_api
 
+import 'dart:convert';
+
+import 'package:deti_azii/pages/profile/profile.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class EditProfilePage extends StatelessWidget {
   EditProfilePage({super.key});
@@ -68,31 +74,96 @@ class EditProfilePage extends StatelessWidget {
               ],
             ),
             Expanded(
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 24.0),
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      foregroundColor: Colors.white,
-                      minimumSize:
-                          Size(MediaQuery.of(context).size.width - 48, 50),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        side: const BorderSide(
-                          color: Colors.blue,
-                          width: 1.0,
-                        ),
-                      ),
-                    ),
-                    child: const Text("Готово"),
-                  ),
-                ),
-              ),
+              child: UpdateButton(
+                  nameController: nameController,
+                  passwordController: passwordController),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class UpdateButton extends StatelessWidget {
+  final TextEditingController nameController;
+  final TextEditingController passwordController;
+
+  const UpdateButton(
+      {super.key,
+      required this.nameController,
+      required this.passwordController});
+
+  Future<void> sendPostRequest(BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? authToken = prefs.getString('auth_token');
+    final url = Uri.https('deti-azii.ru', 'api/user/update');
+
+    Map<String, String> requestBody = {
+      if (nameController.text.isNotEmpty) 'name': nameController.text,
+      if (passwordController.text.isNotEmpty)
+        'password': passwordController.text,
+    };
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Accept': 'application/json',
+        'Authorization':
+            'Bearer ${authToken}' // Установите заголовок Accept на application/json
+      },
+      body: requestBody,
+    );
+
+    if (response.statusCode == 200) {
+      var jsonResponse = json.decode(response.body);
+      Fluttertoast.showToast(
+        msg: "${jsonResponse['message']}",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+      );
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const ProfilePage()),
+      );
+    } else {
+      // Request failed, handle errors here.
+      var jsonResponse = json.decode(response.body);
+      Fluttertoast.showToast(
+        msg: "${jsonResponse['message']}",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 24.0),
+        child: ElevatedButton(
+          onPressed: () {
+            sendPostRequest(context);
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.blue,
+            foregroundColor: Colors.white,
+            minimumSize: Size(MediaQuery.of(context).size.width - 48, 50),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+              side: const BorderSide(
+                color: Colors.blue,
+                width: 1.0,
+              ),
+            ),
+          ),
+          child: const Text("Готово"),
         ),
       ),
     );

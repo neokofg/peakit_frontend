@@ -64,18 +64,6 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(top: 16.0),
-          child: GestureDetector(
-            child: const Text(
-              "Добавить фото",
-              style: TextStyle(
-                color: Colors.blue,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ),
-        Padding(
           padding: EdgeInsets.only(top: 16.0),
           child: Text(
             jsonResponse['user'][0]['name'],
@@ -88,7 +76,7 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         Container(
           height: 30,
-          margin: const EdgeInsets.only(top: 4, left: 24, right: 24),
+          margin: const EdgeInsets.only(top: 12, left: 24, right: 24),
           decoration: BoxDecoration(
             borderRadius:
                 BorderRadius.circular(12), // Здесь задается радиус закругления
