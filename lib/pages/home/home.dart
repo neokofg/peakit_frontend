@@ -2,10 +2,53 @@ import 'package:flutter/material.dart';
 import 'package:peakit_frontend/pages/home/languages.dart';
 import 'package:peakit_frontend/pages/maps/maps.dart';
 import 'package:peakit_frontend/pages/profile/profile.dart';
+import 'package:peakit_frontend/pages/results/results.dart';
+import 'package:peakit_frontend/pages/tickets/qrcode.dart';
 import 'package:peakit_frontend/pages/tickets/tickets.dart';
+import 'package:peakit_frontend/pages/webview.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  Widget? _ticketWidget;
+  @override
+  void initState() {
+    super.initState();
+    loadTicketWidget();
+  }
+
+  Future<void> loadTicketWidget() async {
+    final result = await sendPostRequest();
+    setState(() {
+      _ticketWidget = result;
+    });
+  }
+
+  Future<Widget> sendPostRequest() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? authToken = prefs.getString('auth_token');
+    final url = Uri.https('deti-azii.ru', 'api/user/ticket');
+    final response = await http.get(
+      url,
+      headers: {
+        'Accept': 'application/json',
+        'Authorization':
+            'Bearer ${authToken}' // Установите заголовок Accept на application/json
+      },
+    );
+    if (response.statusCode == 200) {
+      return HaveTicket();
+    } else {
+      return WithoutTicket();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,14 +99,12 @@ class HomePage extends StatelessWidget {
       bottomNavigationBar: BottomNavigationBar(
         onTap: (int index) {
           if (index == 0) {
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const HomePage()));
           } else if (index == 1) {
             Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => const MapsPage()));
           } else if (index == 2) {
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const TicketsPage()));
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => TicketsPage()));
           } else if (index == 3) {
             Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => const ProfilePage()));
@@ -108,30 +149,11 @@ class HomePage extends StatelessWidget {
       body: SafeArea(
         child: ListView(
           children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 24.0),
-              child: Center(
-                child: Stack(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                      child: Image.asset("assets/notickets.png"),
-                    ),
-                    Positioned(
-                      bottom: 50, // Расположение кнопки снизу
-                      left: 48, // Расположение кнопки слева
-                      child: ElevatedButton(
-                        onPressed: () {
-                          // Действие при нажатии на кнопку
-                        },
-                        child: const Text('Купить билеты',
-                            style: TextStyle(fontSize: 12)),
-                      ),
-                    ),
-                  ],
+            _ticketWidget ??
+                SizedBox(
+                  height: 221,
+                  child: Center(child: CircularProgressIndicator()),
                 ),
-              ),
-            ),
             Padding(
               padding: const EdgeInsets.only(top: 24, left: 24, right: 24),
               child: Column(
@@ -154,7 +176,8 @@ class HomePage extends StatelessWidget {
                         margin: const EdgeInsets.only(left: 15),
                         child: GestureDetector(
                           onTap: () {
-                            // Действие при нажатии на изображение
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => const ResultsPage()));
                           },
                           child: Image.asset('assets/documentresults.png'),
                         ),
@@ -169,7 +192,8 @@ class HomePage extends StatelessWidget {
                         margin: const EdgeInsets.only(top: 15),
                         child: GestureDetector(
                           onTap: () {
-                            // Действие при нажатии на изображение
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => const QiwiWebview()));
                           },
                           child: Image.asset('assets/ticketsbuy.png'),
                         ),
@@ -264,6 +288,79 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class WithoutTicket extends StatelessWidget {
+  const WithoutTicket({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 24.0),
+      child: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: Image.asset("assets/notickets.png"),
+          ),
+          Positioned(
+            bottom: 50, // Расположение кнопки снизу
+            left: 48, // Расположение кнопки слева
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => QiwiWebview()));
+              },
+              child:
+                  const Text('Купить билеты', style: TextStyle(fontSize: 12)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class HaveTicket extends StatelessWidget {
+  const HaveTicket({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 40.0, left: 24, right: 24),
+          child: Image.asset("assets/ticket.png"),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 12.0),
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const QRcodePage()));
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              foregroundColor: Colors.blue,
+              minimumSize: Size(MediaQuery.of(context).size.width - 48, 50),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+                side: const BorderSide(
+                  color: Colors.blue,
+                  width: 1.0,
+                ),
+              ),
+            ),
+            child: const Text("Предъявить билет"),
+          ),
+        ),
+      ],
     );
   }
 }

@@ -33,11 +33,9 @@ class MapsPage extends StatelessWidget {
             Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => const HomePage()));
           } else if (index == 1) {
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const MapsPage()));
           } else if (index == 2) {
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const TicketsPage()));
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => TicketsPage()));
           } else if (index == 3) {
             Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => const ProfilePage()));

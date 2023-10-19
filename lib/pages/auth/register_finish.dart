@@ -1,8 +1,12 @@
 // ignore_for_file: library_private_types_in_public_api
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:peakit_frontend/pages/home/home.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterFinishPage extends StatelessWidget {
   RegisterFinishPage({super.key});
@@ -182,19 +186,36 @@ class SendButton extends StatelessWidget {
       {super.key,
       required this.nameController,
       required this.passwordController});
-  Future<void> sendPostRequest() async {
-    final url = Uri.https('deti-azii.ru', 'api/auth/register');
+  Future<void> sendPostRequest(BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? authToken = prefs.getString('auth_token');
+    final url = Uri.https('deti-azii.ru', 'api/auth/register/update');
     final response = await http.post(
       url,
+      headers: {
+        'Accept': 'application/json',
+        'Authorization':
+            'Bearer ${authToken}' // Установите заголовок Accept на application/json
+      },
       body: {'name': nameController.text, 'password': passwordController.text},
     );
 
     if (response.statusCode == 200) {
       // Request was successful, handle the response here.
-      print('POST request successful');
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomePage()),
+      );
     } else {
       // Request failed, handle errors here.
-      print('POST request failed with status code: ${response.statusCode}');
+      var jsonResponse = json.decode(response.body);
+      Fluttertoast.showToast(
+        msg: "${jsonResponse['message']}",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
     }
   }
 
@@ -206,10 +227,7 @@ class SendButton extends StatelessWidget {
         padding: const EdgeInsets.only(bottom: 24.0),
         child: ElevatedButton(
           onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const HomePage()),
-            );
+            sendPostRequest(context);
           },
           style: ButtonStyle(
               minimumSize: MaterialStateProperty.all(const Size(345, 50))),

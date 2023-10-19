@@ -1,7 +1,61 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'dart:typed_data';
 
-class QRcodePage extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:peakit_frontend/pages/tickets/tickets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+
+class QRcodePage extends StatefulWidget {
   const QRcodePage({super.key});
+
+  @override
+  State<QRcodePage> createState() => QRcodePageState();
+}
+
+class QRcodePageState extends State<QRcodePage> {
+  Widget? _ticketWidget;
+  @override
+  void initState() {
+    super.initState();
+    loadTicketWidget();
+  }
+
+  Future<void> loadTicketWidget() async {
+    final result = await sendPostRequest();
+    setState(() {
+      _ticketWidget = result;
+    });
+  }
+
+  Future<Image> sendPostRequest() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? authToken = prefs.getString('auth_token');
+    final url = Uri.https('deti-azii.ru', 'api/user/ticket/qr');
+    final response = await http.get(
+      url,
+      headers: {
+        'Accept': 'application/json',
+        'Authorization':
+            'Bearer ${authToken}' // Установите заголовок Accept на application/json
+      },
+    );
+
+    if (response.statusCode == 200) {
+      var jsonResponse = json.decode(response.body);
+      Uint8List uint8List =
+          Uint8List.fromList(base64.decode(jsonResponse['qr']));
+      Image image = Image.memory(uint8List);
+      return image;
+    } else {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => TicketsPage(),
+        ),
+      );
+      return Image.asset("assets/qrcode.png");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +90,8 @@ class QRcodePage extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.only(top: 40.0, left: 24, right: 24),
-                child: Image.asset("assets/qrcode.png"),
+                child:
+                    _ticketWidget ?? Center(child: CircularProgressIndicator()),
               )
             ],
           ),

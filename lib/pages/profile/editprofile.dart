@@ -73,10 +73,7 @@ class EditProfilePage extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 24.0),
                   child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => EditProfilePage()));
-                    },
+                    onPressed: () {},
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                       foregroundColor: Colors.white,

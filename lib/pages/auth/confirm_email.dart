@@ -1,8 +1,12 @@
 // ignore_for_file: library_private_types_in_public_api
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:peakit_frontend/pages/auth/register_finish.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ConfirmEmailPage extends StatelessWidget {
   ConfirmEmailPage({super.key});
@@ -76,6 +80,8 @@ class _InputCode extends State<InputCode> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextField(
+              keyboardType: TextInputType.number,
+              maxLength: 4,
               controller: _textEditingController,
               onChanged: (value) {
                 widget.codeController.text = value;
@@ -96,19 +102,36 @@ class SendButton extends StatelessWidget {
   final TextEditingController codeController;
 
   const SendButton({super.key, required this.codeController});
-  Future<void> sendPostRequest() async {
-    final url = Uri.https('deti-azii.ru', 'api/auth/register');
+  Future<void> sendPostRequest(BuildContext context) async {
+    final url = Uri.https('deti-azii.ru', 'api/auth/register/approve');
     final response = await http.post(
       url,
+      headers: {
+        'Accept':
+            'application/json', // Установите заголовок Accept на application/json
+      },
       body: {'code': codeController.text},
     );
 
     if (response.statusCode == 200) {
+      var jsonResponse = json.decode(response.body);
       // Request was successful, handle the response here.
-      print('POST request successful');
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('auth_token', "${jsonResponse['token']}");
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => RegisterFinishPage()),
+      );
     } else {
       // Request failed, handle errors here.
-      print('POST request failed with status code: ${response.statusCode}');
+      var jsonResponse = json.decode(response.body);
+      Fluttertoast.showToast(
+        msg: "${jsonResponse['message']}",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
     }
   }
 
@@ -119,11 +142,8 @@ class SendButton extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(bottom: 24.0),
         child: ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => RegisterFinishPage()),
-            );
+          onPressed: () async {
+            await sendPostRequest(context);
           },
           style: ButtonStyle(
               minimumSize: MaterialStateProperty.all(const Size(345, 50))),

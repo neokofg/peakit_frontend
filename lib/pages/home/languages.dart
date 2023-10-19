@@ -91,13 +91,7 @@ class Language extends StatelessWidget {
       width: MediaQuery.of(context).size.width,
       height: 60,
       child: ElevatedButton(
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => const LanguagesPage(),
-            ),
-          );
-        },
+        onPressed: () {},
         style: ElevatedButton.styleFrom(
           alignment: Alignment.centerLeft,
           backgroundColor: const Color.fromARGB(255, 234, 242, 255),

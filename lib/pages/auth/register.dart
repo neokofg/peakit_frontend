@@ -2,7 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:peakit_frontend/pages/auth/confirm_email.dart';
+import 'dart:convert';
 
 class RegisterPage extends StatelessWidget {
   RegisterPage({super.key});
@@ -93,19 +95,32 @@ class SendButton extends StatelessWidget {
   final TextEditingController emailController;
 
   const SendButton({super.key, required this.emailController});
-  Future<void> sendPostRequest() async {
+  Future<void> sendPostRequest(BuildContext context) async {
     final url = Uri.https('deti-azii.ru', 'api/auth/register');
     final response = await http.post(
       url,
+      headers: {
+        'Accept':
+            'application/json', // Установите заголовок Accept на application/json
+      },
       body: {'email': emailController.text},
     );
-
+    print(emailController);
     if (response.statusCode == 200) {
       // Request was successful, handle the response here.
-      print('POST request successful');
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => ConfirmEmailPage()),
+      );
     } else {
-      // Request failed, handle errors here.
-      print('POST request failed with status code: ${response.statusCode}');
+      var jsonResponse = json.decode(response.body);
+      Fluttertoast.showToast(
+        msg: "${jsonResponse['message']}",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
     }
   }
 
@@ -116,11 +131,8 @@ class SendButton extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(bottom: 24.0),
         child: ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ConfirmEmailPage()),
-            );
+          onPressed: () async {
+            await sendPostRequest(context);
           },
           style: ButtonStyle(
               minimumSize: MaterialStateProperty.all(const Size(345, 50))),
